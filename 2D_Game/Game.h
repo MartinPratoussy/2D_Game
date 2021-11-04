@@ -4,6 +4,9 @@
 #include <SDL_image.h>
 #include <iostream>
 
+#include "TextureManager.h"
+#include "GameObject.h"
+
 class Game
 {
 public:
@@ -19,9 +22,10 @@ public:
 
 	bool running() const { return is_running_; }
 
+	static SDL_Renderer* renderer;
+
 private:
 	bool is_running_;
 	SDL_Window *window_;
-	SDL_Renderer *renderer_;
 };
 

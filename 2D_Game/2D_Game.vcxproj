@@ -147,6 +147,9 @@
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="TextureManager.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="assets\player.png" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
