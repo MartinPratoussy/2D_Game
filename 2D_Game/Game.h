@@ -20,6 +20,7 @@ public:
 	bool running() const { return is_running_; }
 
 	static SDL_Renderer* renderer;
+	static SDL_Event event;
 
 private:
 	bool is_running_;
