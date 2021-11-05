@@ -13,6 +13,10 @@ public:
 
 	TransformComponent* transform;
 
+	ColliderComponent(std::string tag) {
+		this->tag = tag;
+	}
+
 	void init() override
 	{
 		if(!entity->hasComponents<TransformComponent>())
@@ -25,8 +29,8 @@ public:
 
 	void update() override
 	{
-		collider.x = transform->position.x;
-		collider.y = transform->position.y;
+		collider.x = static_cast<int>(transform->position.x);
+		collider.y = static_cast<int>(transform->position.y);
 		collider.w = transform->width * transform->scale;
 		collider.h = transform->height * transform->scale;
 	}

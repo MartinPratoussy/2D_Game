@@ -4,6 +4,7 @@
 #include "Map.h"
 #include "Components.h"
 #include "Vector2D.h"
+#include "Collision.h"
 
 Map* map;
 Manager manager;
@@ -12,6 +13,7 @@ SDL_Renderer* Game::renderer = nullptr;
 SDL_Event Game::event;
 
 auto& player(manager.addEntity());
+auto& wall(manager.addEntity());
 
 Game::Game()
 {
@@ -43,10 +45,14 @@ void Game::init(const char * title, int pos_x, int pos_y, int width, int height,
 
 	map = new Map();
 
-	player.addComponent<TransformComponent>(100, 500);
+	player.addComponent<TransformComponent>(2);
 	player.addComponent<SpriteComponent>("assets/player.png");
 	player.addComponent<KeyboardController>();
+	player.addComponent<ColliderComponent>("player");
 
+	wall.addComponent<TransformComponent>(300.0f, 300.0f, 300, 20, 1);
+	wall.addComponent<SpriteComponent>("assets/dirt.png");
+	wall.addComponent<ColliderComponent>("wall");
 }
 
 void Game::handle_events()
@@ -68,6 +74,12 @@ void Game::update()
 {
 	manager.refresh();
 	manager.update();
+
+	if (Collision::AABB(player.getComponent<ColliderComponent>().collider, 
+		wall.getComponent<ColliderComponent>().collider)) 
+	{
+		player.getComponent<TransformComponent>().velocity * -1;
+	}
 }
 
 void Game::render()
@@ -75,8 +87,8 @@ void Game::render()
 	SDL_RenderClear(renderer);
 
 	map->DrawMap();
-
 	manager.draw();
+
 	SDL_RenderPresent(renderer);
 }
 

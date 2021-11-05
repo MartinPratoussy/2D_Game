@@ -47,6 +47,8 @@ public:
 	{
 		dest_rect.x = static_cast<int>(transform_->position.x);
 		dest_rect.y = static_cast<int>(transform_->position.y);
+		dest_rect.w = transform_->width * transform_->scale;
+		dest_rect.h = transform_->height * transform_->scale;
 	}
 
 	void draw() override
