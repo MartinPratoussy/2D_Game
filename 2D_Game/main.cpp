@@ -14,6 +14,9 @@ int main(int args, char *argv[])
 	game->init("2D_Game", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 680, false);
 
 	while (game->running()) {
+
+		std::cout << "Game is running..." << std::endl;
+
 		frameStart = SDL_GetTicks();
 
 		game->handle_events();
