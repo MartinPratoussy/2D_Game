@@ -13,18 +13,22 @@ public:
 
 	TransformComponent* transform;
 
-	ColliderComponent(std::string tag) {
+	ColliderComponent(std::string tag)
+	{
 		this->tag = tag;
 	}
 
 	void init() override
 	{
-		if(!entity->hasComponents<TransformComponent>())
+		if (!entity->hasComponents<TransformComponent>())
 		{
 			entity->addComponent<TransformComponent>();
 		}
 
 		transform = &entity->getComponent<TransformComponent>();
+
+
+		Game::colliders.push_back(this);
 	}
 
 	void update() override
@@ -35,4 +39,3 @@ public:
 		collider.h = transform->height * transform->scale;
 	}
 };
-

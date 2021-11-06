@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Game.h"
+#include <string>
 
 #define MAP_ROW_NUMBER 20
 #define MAP_COLUMN_NUMBER 25
@@ -13,16 +13,8 @@ public:
 	Map();
 	~Map();
 
-	void LoadMap(int array[MAP_ROW_NUMBER][MAP_COLUMN_NUMBER]);
-	void DrawMap();
+	static void LoadMap(std::string path, int size_x, int size_y);
 
 private:
-	SDL_Rect src_rect, dest_rect;
-
-	SDL_Texture* dirt;
-	SDL_Texture* grass;
-	SDL_Texture* water;
-
-	int map[MAP_ROW_NUMBER][MAP_COLUMN_NUMBER];
 };
 

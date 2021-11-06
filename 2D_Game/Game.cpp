@@ -12,6 +12,8 @@ Manager manager;
 SDL_Renderer* Game::renderer = nullptr;
 SDL_Event Game::event;
 
+std::vector<ColliderComponent*> Game::colliders;
+
 auto& player(manager.addEntity());
 auto& wall(manager.addEntity());
 
@@ -43,7 +45,7 @@ void Game::init(const char * title, int pos_x, int pos_y, int width, int height,
 		is_running_ = false;
 	}
 
-	map = new Map();
+	Map::LoadMap("assets/maps/pyxel_16x16.map", 16, 16);
 
 	player.addComponent<TransformComponent>(2);
 	player.addComponent<SpriteComponent>("assets/player.png");
@@ -75,10 +77,9 @@ void Game::update()
 	manager.refresh();
 	manager.update();
 
-	if (Collision::AABB(player.getComponent<ColliderComponent>().collider, 
-		wall.getComponent<ColliderComponent>().collider)) 
+	for (auto cc : colliders)
 	{
-		player.getComponent<TransformComponent>().velocity * -1;
+		Collision::AABB(player.getComponent<ColliderComponent>(), *cc);
 	}
 }
 
@@ -86,7 +87,6 @@ void Game::render()
 {
 	SDL_RenderClear(renderer);
 
-	map->DrawMap();
 	manager.draw();
 
 	SDL_RenderPresent(renderer);
@@ -99,4 +99,10 @@ void Game::clean()
 	SDL_Quit();
 
 	std::cout << "Game cleaned" << std::endl;
+}
+
+void Game::AddTile(int id, int x, int y)
+{
+	auto& tile(manager.addEntity());
+	tile.addComponent<TileComponent>(x, y, 32, 32, id);
 }
