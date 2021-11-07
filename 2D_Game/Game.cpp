@@ -14,6 +14,8 @@ SDL_Event Game::event;
 
 std::vector<ColliderComponent*> Game::colliders;
 
+bool Game::is_running = false;
+
 auto& player(manager.addEntity());
 
 const char* map_file = "assets/terrain_texture.png";
@@ -25,6 +27,11 @@ enum group_labels : std::size_t
 	group_enemies,
 	group_colliders
 };
+
+auto& tiles(manager.GetGroup(group_maps));
+auto& players(manager.GetGroup(group_players));
+auto& enemies(manager.GetGroup(group_enemies));
+auto& colliders(manager.GetGroup(group_colliders));
 
 Game::Game()
 {
@@ -48,15 +55,15 @@ void Game::init(const char * title, int pos_x, int pos_y, int width, int height,
 		renderer = SDL_CreateRenderer(window_, -1, 0);
 		if (renderer) std::cout << "Renderer created!" << std::endl;
 
-		is_running_ = true;
+		is_running = true;
 	}
 	else {
-		is_running_ = false;
+		is_running = false;
 	}
 
 	Map::LoadMap("assets/map.map", 25, 20);
 
-	player.addComponent<TransformComponent>(4);
+	player.addComponent<TransformComponent>(2);
 	player.addComponent<SpriteComponent>("assets/player_anims.png", true);
 	player.addComponent<KeyboardController>();
 	player.addComponent<ColliderComponent>("player");
@@ -70,7 +77,7 @@ void Game::handle_events()
 	switch (event.type)
 	{
 	case SDL_QUIT:
-		is_running_ = false;
+		is_running = false;
 		break;
 
 	default:
@@ -83,17 +90,15 @@ void Game::update()
 	manager.refresh();
 	manager.update();
 
-	for (auto cc : colliders)
+	Vector2D player_velocity = player.getComponent<TransformComponent>().velocity;
+	int player_speed = player.getComponent<TransformComponent>().speed;
+
+	for (auto t : tiles)
 	{
-		Collision::AABB(player.getComponent<ColliderComponent>(), *cc);
+		t->getComponent<TileComponent>().dest_rect.x += -(player_velocity.x * player_speed);
+		t->getComponent<TileComponent>().dest_rect.y += -(player_velocity.y * player_speed);
 	}
 }
-
-auto& tiles(manager.GetGroup(group_maps));
-auto& players(manager.GetGroup(group_players));
-auto& enemies(manager.GetGroup(group_enemies));
-auto& colliders(manager.GetGroup(group_colliders));
-
 
 void Game::render()
 {
