@@ -15,7 +15,8 @@ SDL_Event Game::event;
 std::vector<ColliderComponent*> Game::colliders;
 
 auto& player(manager.addEntity());
-auto& wall(manager.addEntity());
+
+const char* map_file = "assets/terrain_texture.png";
 
 enum group_labels : std::size_t
 {
@@ -53,18 +54,13 @@ void Game::init(const char * title, int pos_x, int pos_y, int width, int height,
 		is_running_ = false;
 	}
 
-	Map::LoadMap("assets/maps/pyxel_16x16.map", 16, 16);
+	Map::LoadMap("assets/map.map", 25, 20);
 
-	player.addComponent<TransformComponent>(2);
+	player.addComponent<TransformComponent>(4);
 	player.addComponent<SpriteComponent>("assets/player_anims.png", true);
 	player.addComponent<KeyboardController>();
 	player.addComponent<ColliderComponent>("player");
 	player.addGroup(group_players);
-
-	wall.addComponent<TransformComponent>(300.0f, 300.0f, 300, 20, 1);
-	wall.addComponent<SpriteComponent>("assets/dirt.png");
-	wall.addComponent<ColliderComponent>("wall");
-	wall.addGroup(group_maps);
 }
 
 void Game::handle_events()
@@ -119,9 +115,9 @@ void Game::clean()
 	std::cout << "Game cleaned" << std::endl;
 }
 
-void Game::AddTile(int id, int x, int y)
+void Game::AddTile(int src_x, int src_y, int pos_x, int pos_y)
 {
 	auto& tile(manager.addEntity());
-	tile.addComponent<TileComponent>(x, y, 32, 32, id);
+	tile.addComponent<TileComponent>(src_x, src_y, pos_x, pos_y, map_file);
 	tile.addGroup(group_maps);
 }
